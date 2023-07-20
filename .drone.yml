@@ -12,24 +12,13 @@ steps:
 - name: Build-Image
   image: plugins/docker
   settings:
-    repo: issaouib/drone-back
+    repo: issaouib/droneci
     tags: [ "${DRONE_COMMIT_SHA:0:7}","latest" ]
     username:
       from_secret: docker-username
     password:
       from_secret: docker-password
 
-- name: Deploy-k8s
-  image: bitnami/kubectl:1.22.0
-  settings:
-    kubernetes_server:
-      from_secret: k8s_server
-    kubernetes_cert:
-      from_secret: k8s_cert
-    kubernetes_token:
-      from_secret: k8s_token
-  commands:
-    - sed -i "s|drone-back:v1|drone-back:${DRONE_COMMIT_SHA:0:7}|g" deployments.yml
-    - kubectl apply -f deployments.yml
+
 
 
